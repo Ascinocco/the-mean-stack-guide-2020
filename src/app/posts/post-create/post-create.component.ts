@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Post } from '../post.model';
+import { NgForm } from '@angular/forms';
+import { PostsService } from '../posts.service';
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
@@ -10,15 +11,13 @@ import { Post } from '../post.model';
 export class PostCreateComponent {
   enteredTitle = '';
   enteredContent = '';
-  // the output decorator allows you to list for this event in the parent
-  @Output() postCreated = new EventEmitter<Post>();
 
-  onAddPost() {
-    const post: Post = {
-      title: this.enteredTitle,
-      content: this.enteredContent,
-    };
+  constructor(public postsService: PostsService) {}
 
-    this.postCreated.emit(post);
+  onAddPost(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
+    this.postsService.addPost(form.value.title, form.value.content);
   }
 }
