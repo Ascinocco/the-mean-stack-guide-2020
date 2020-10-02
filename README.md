@@ -1,5 +1,8 @@
 # MeanCourse
 
+## The MEAN Stack guide 2020
+This app was built following https://www.udemy.com/course/angular-2-and-nodejs-the-practical-guide/learn/lecture/10419170#content
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.8.
 
 ## Development server

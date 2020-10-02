@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+// The subject is the observable
 import { Subject } from 'rxjs-compat';
 import { Post } from './post.model';
 
