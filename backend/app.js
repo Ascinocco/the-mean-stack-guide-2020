@@ -1,6 +1,10 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
+
+// express middleware for parses json data, body parses supports many data formats
+app.use(bodyParser.json());
 
 app.use((req, res, next) => {
   // allow and client to access resources
@@ -18,7 +22,16 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/api/posts', (req, res, next) => {
+app.post('/api/posts', (req, res, next) => {
+  console.log('posts post req data', req.body);
+  res
+    .status(201)
+    .json({
+      message: 'Post added successfully',
+    });
+});
+
+app.get('/api/posts', (req, res, next) => {
   const posts = [
     { id: 'woiegjiew', title: 'Post 1', content: 'some content 1' },
     { id: 'wioehhwme', title: 'Post 2', content: 'some content 2' },
