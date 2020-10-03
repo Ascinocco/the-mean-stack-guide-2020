@@ -11,7 +11,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   // allow these non default headers if the request contains them
   res.setHeader(
-    'Access-Control-Allow-Header',
+    'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',
   );
   // allow these http methods
