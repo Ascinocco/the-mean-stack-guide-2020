@@ -19,6 +19,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.postsService.getPosts();
     this.postsSub = this.postsService.getPostUpdateListener().subscribe((posts: Post[]) => {
+      console.log('post-list posts', posts);
       this.posts = posts;
       this.isLoading = false;
     });

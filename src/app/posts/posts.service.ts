@@ -36,7 +36,7 @@ export class PostsService {
         return data.posts.map(post => ({
           id: post._id,
           title: post.title,
-          content: post.title,
+          content: post.content,
         }));
       }))
       .subscribe((posts) => {
