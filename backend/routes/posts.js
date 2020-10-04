@@ -30,9 +30,12 @@ const storage = multer.diskStorage({
 
 // multer will attempt to extract single file from request
 router.post('', multer({ storage }).single('image'), (req, res, next) => {
+  const url = req.protocol + '://' + req.get('host');
+
   const post = new Post({
     title: req.body.title,
     content: req.body.content,
+    imagePath: url + '/images/' + req.file.filename,
   });
 
   post.save().then((newPost) => {
@@ -40,7 +43,12 @@ router.post('', multer({ storage }).single('image'), (req, res, next) => {
       .status(201)
       .json({
         message: 'Post added successfully',
-        postId: newPost._id,
+        post: {
+          id: newPost._id,
+          title: newPost.title,
+          content: newPost.content,
+          imagePath: newPost.imagePath,
+        },
       });
   });
 });
