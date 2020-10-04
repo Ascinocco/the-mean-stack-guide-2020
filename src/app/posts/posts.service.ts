@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 interface PostsResponse {
   message: string;
   posts: any;
+  maxPosts: number;
 }
 
 @Injectable({
@@ -17,7 +18,7 @@ interface PostsResponse {
 })
 export class PostsService {
   private posts: Post[] = [];
-  private postsUpdated = new Subject<Post[]>();
+  private postsUpdated = new Subject<{ posts: Post[]; postCount: number }>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -26,23 +27,30 @@ export class PostsService {
     return this.http.get<{ _id: string, title: string, content: string, imagePath: string }>('http://localhost:3000/api/posts/' + id);
   }
 
-  getPosts() {
+  getPosts(postsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
     // observables from built in angular packages will automatically unsubscribe upon
     // destroy event
     this.http
-      .get<PostsResponse>('http://localhost:3000/api/posts')
+      .get<PostsResponse>('http://localhost:3000/api/posts' + queryParams)
       .pipe(map((data: PostsResponse) => {
         // Strips message since we aren't using it
-        return data.posts.map(post => ({
-          id: post._id,
-          title: post.title,
-          content: post.content,
-          imagePath: post.imagePath,
-        }));
+        return {
+          posts: data.posts.map(post => ({
+            id: post._id,
+            title: post.title,
+            content: post.content,
+            imagePath: post.imagePath,
+          })),
+          maxPosts: data.maxPosts,
+        };
       }))
-      .subscribe((posts) => {
-        this.posts = posts;
-        this.postsUpdated.next([...this.posts]);
+      .subscribe((data) => {
+        this.posts = data.posts;
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          postCount: data.maxPosts,
+        });
       });
   }
 
@@ -58,16 +66,7 @@ export class PostsService {
 
     this.http
       .post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
-      .subscribe((data) => {
-        const post: Post = {
-          id: data.post.id,
-          title,
-          content,
-          imagePath: data.post.imagePath || '',
-        };
-
-        this.posts.push(post);
-        this.postsUpdated.next([...this.posts]);
+      .subscribe(() => {
         this.router.navigate(['/']);
       });
   }
@@ -92,27 +91,12 @@ export class PostsService {
 
     this.http
       .put('http://localhost:3000/api/posts/' + id, postData)
-      .subscribe((data) => {
-        const updatedPosts = [...this.posts];
-        const oldPostIndex = updatedPosts.findIndex(p => p.id === id);
-        updatedPosts[oldPostIndex] = {
-          id,
-          title,
-          content,
-          imagePath: '',
-        };
-        this.posts = updatedPosts;
-        this.postsUpdated.next([...this.posts]);
+      .subscribe(() => {
         this.router.navigate(['/']);
       });
   }
 
   deletePost(postId) {
-    this.http
-      .delete('http://localhost:3000/api/posts/' + postId)
-      .subscribe(() => {
-        this.posts = this.posts.filter(post => post.id !== postId);
-        this.postsUpdated.next([...this.posts]);
-      });
+    return this.http.delete('http://localhost:3000/api/posts/' + postId);
   }
 }
