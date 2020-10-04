@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs-compat';
 import { Post } from './post.model';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 interface PostsResponse {
   message: string;
@@ -18,7 +19,7 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject<Post[]>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   // Returns observable so we can watch data from the component
   getPost(id: string) {
@@ -60,6 +61,7 @@ export class PostsService {
         post.id = data.postId;
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
+        this.router.navigate(['/']);
       });
   }
 
@@ -78,6 +80,7 @@ export class PostsService {
         updatedPosts[oldPostIndex] = post;
         this.posts = updatedPosts;
         this.postsUpdated.next([...this.posts]);
+        this.router.navigate(['/']);
       });
   }
 
