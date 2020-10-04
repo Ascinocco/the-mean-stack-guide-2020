@@ -20,6 +20,11 @@ export class PostsService {
 
   constructor(private http: HttpClient) {}
 
+  // Returns observable so we can watch data from the component
+  getPost(id: string) {
+    return this.http.get<{ _id: string, title: string, content: string }>('http://localhost:3000/api/posts/' + id);
+  }
+
   getPosts() {
     // observables from built in angular packages will automatically unsubscribe upon
     // destroy event
@@ -58,11 +63,29 @@ export class PostsService {
       });
   }
 
+  updatePost(id: string, title: string, content: string) {
+    const post: Post = {
+      id,
+      title,
+      content,
+    };
+
+    this.http
+      .put('http://localhost:3000/api/posts/' + post.id, post)
+      .subscribe(() => {
+        const updatedPosts = [...this.posts];
+        const oldPostIndex = updatedPosts.findIndex(p => p.id === post.id);
+        updatedPosts[oldPostIndex] = post;
+        this.posts = updatedPosts;
+        this.postsUpdated.next([...this.posts]);
+      });
+  }
+
   deletePost(postId) {
     this.http
       .delete('http://localhost:3000/api/posts/' + postId)
       .subscribe(() => {
-        this.posts = this.posts.filter(post => post.id !== postId);;
+        this.posts = this.posts.filter(post => post.id !== postId);
         this.postsUpdated.next([...this.posts]);
       });
   }
