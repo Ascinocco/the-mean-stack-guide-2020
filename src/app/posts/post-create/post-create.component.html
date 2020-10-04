@@ -22,7 +22,11 @@
       <input
         #filePicker
         type="file"
+        (change)="onImagePicked($event)"
       >
+    </div>
+    <div class="image-preview" *ngIf="imagePreview && form.get('image').valid">
+      <img [src]="imagePreview" [alt]="form.value.title" >
     </div>
     <mat-form-field>
       <textarea
