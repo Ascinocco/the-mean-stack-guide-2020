@@ -38,3 +38,9 @@ testem.log
 .DS_Store
 Thumbs.db
 .env
+
+# exclude everything
+backend/images/*
+
+# exception to the rule
+!backend/images/.gitkeep

@@ -93,11 +93,12 @@ export class PostCreateComponent implements OnInit {
 
     const title = this.form.value.title;
     const content = this.form.value.content;
+    const image = this.form.value.image;
 
     console.log('this.form.value', this.form.value);
 
     if (this.mode === 'create') {
-      this.postsService.addPost(title, content);
+      this.postsService.addPost(title, content, image);
     } else {
       this.postsService.updatePost(
         this.post.id,
