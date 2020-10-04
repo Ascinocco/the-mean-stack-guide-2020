@@ -45,15 +45,14 @@ export class PostsService {
 
   addPost(title: string, content: string) {
     const post: Post = {
-      id: null,
       title,
       content,
     };
 
     this.http
-      .post<{message: string}>('http://localhost:3000/api/posts', post)
+      .post<{message: string, postId: string}>('http://localhost:3000/api/posts', post)
       .subscribe((data) => {
-        console.log('data.message', data.message);
+        post.id = data.postId;
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
       });

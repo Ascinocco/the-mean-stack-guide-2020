@@ -49,13 +49,14 @@ app.post('/api/posts', (req, res, next) => {
     title: req.body.title,
     content: req.body.content,
   });
-  post.save();
-  res
-    .status(201)
-    .json({
-      message: 'Post added successfully',
-      post,
-    });
+  post.save().then((newPost) => {
+    res
+      .status(201)
+      .json({
+        message: 'Post added successfully',
+        postId: newPost._id,
+      });
+  });
 });
 
 app.get('/api/posts', (req, res, next) => {
