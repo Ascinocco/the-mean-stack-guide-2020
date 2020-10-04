@@ -25,4 +25,8 @@ export class PostListComponent implements OnInit, OnDestroy {
     // required to prevent memory leaks in spa's due to components unmounting
     this.postsSub.unsubscribe();
   }
+
+  onDelete(postId: string) {
+    this.postsService.deletePost(postId);
+  }
 }

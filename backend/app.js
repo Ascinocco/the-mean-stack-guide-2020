@@ -16,7 +16,7 @@ const dbConnString =
 const app = express();
 mongoose.connect(dbConnString)
   .then(() => {
-
+    console.log('db running...');
   })
   .catch((err) => {
     console.log('Connection to db failed!');
@@ -65,6 +65,14 @@ app.get('/api/posts', (req, res, next) => {
         posts,
       });
     });
+});
+
+app.delete('/api/posts/:id', (req, res, next) => {
+  Post.deleteOne({ _id: req.params.id }).then(() => {
+    res.status(200).json({
+      message: 'Post deleted',
+    });
+  });
 });
 
 module.exports = app;
