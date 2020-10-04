@@ -1,7 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const Post = require('./models/post');
+
+const dbConnString =
+  'mongodb+srv://'
+  + process.env.MONGO_DB_USER
+  + ':'
+  + process.env.MONGO_DB_PASSWORD
+  + '@the-mean-stack-guide-20.mj3hi.mongodb.net/'
+  + process.env.MONGO_DB_NAME
+  + '?retryWrites=true&w=majority';
 
 const app = express();
+mongoose.connect(dbConnString)
+  .then(() => {
+
+  })
+  .catch((err) => {
+    console.log('Connection to db failed!');
+    console.error(err);
+    process.exit(1);
+  });
 
 // express middleware for parses json data, body parses supports many data formats
 app.use(bodyParser.json());
@@ -24,25 +45,25 @@ app.use((req, res, next) => {
 
 app.post('/api/posts', (req, res, next) => {
   console.log('posts post req data', req.body);
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+  });
+  post.save();
   res
     .status(201)
     .json({
       message: 'Post added successfully',
+      post,
     });
 });
 
 app.get('/api/posts', (req, res, next) => {
-  const posts = [
-    { id: 'woiegjiew', title: 'Post 1', content: 'some content 1' },
-    { id: 'wioehhwme', title: 'Post 2', content: 'some content 2' },
-    { id: 'pperotgss', title: 'Post 3', content: 'some content 3' },
-  ];
-
-  res
-    .status(200)
-    .json({
-      message: 'Posts fetched successfully',
-      posts,
+  Post.find().then((posts) => {
+    res.status(200).json({
+        message: 'Posts fetched successfully',
+        posts,
+      });
     });
 });
 
