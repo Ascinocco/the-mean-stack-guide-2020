@@ -2,16 +2,16 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 @Component({
-  templateUrl: './login.component.html',
+  templateUrl: './signup.component.html',
   styleUrls: [
-    './login.component.css',
+    './signup.component.css',
   ],
 })
 
-export class LoginComponent {
+export class SignupComponent {
   isLoading = false;
 
-  onLogin(form: NgForm) {
+  onSignup(form: NgForm) {
     console.log('form-value', form.value)
   }
 }
