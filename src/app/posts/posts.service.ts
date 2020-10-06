@@ -24,7 +24,13 @@ export class PostsService {
 
   // Returns observable so we can watch data from the component
   getPost(id: string) {
-    return this.http.get<{ _id: string, title: string, content: string, imagePath: string }>('http://localhost:3000/api/posts/' + id);
+    return this.http.get<{
+      _id: string,
+      title: string,
+      content: string,
+      imagePath: string,
+      creator: string,
+    }>('http://localhost:3000/api/posts/' + id);
   }
 
   getPosts(postsPerPage: number, currentPage: number) {
@@ -41,6 +47,7 @@ export class PostsService {
             title: post.title,
             content: post.content,
             imagePath: post.imagePath,
+            creator: post.creator,
           })),
           maxPosts: data.maxPosts,
         };
@@ -86,6 +93,7 @@ export class PostsService {
         title,
         content,
         imagePath: image,
+        creator: null,
       };
     }
 

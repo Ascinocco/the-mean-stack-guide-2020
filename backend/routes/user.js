@@ -60,6 +60,7 @@ router.post('/login', (req, res, next) => {
 
       return res.status(200).json({
         token,
+        userId: userToLogin._id,
         expiresIn: 3600,
       });
     })
