@@ -52,6 +52,11 @@ router.post('', checkAuth, multer({ storage }).single('image'), (req, res, next)
           imagePath: newPost.imagePath,
         },
       });
+  })
+  .catch((error) => {
+    res.status(500).json({
+      message: 'Creating a post failed!',
+    });
   });
 });
 
@@ -83,6 +88,11 @@ router.put('/:id', checkAuth, multer({ storage }).single('image'), (req, res, ne
       message: 'Update successful',
       post,
     });
+  })
+  .catch((error) => {
+    res.status(500).json({
+      message: 'Could not update post.'
+    });
   });
 });
 
@@ -96,6 +106,11 @@ router.delete('/:id', checkAuth, (req, res, next) => {
 
     res.status(200).json({
       message: 'Post deleted',
+    });
+  })
+  .catch((error) => {
+    res.status(500).json({
+      message: 'Failed to delete post.',
     });
   });
 });
@@ -125,6 +140,11 @@ router.get('', (req, res, next) => {
         posts: fetchPosts,
         maxPosts: count,
       });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: 'Fetching posts failed',
+      });
     });
 });
 
@@ -137,7 +157,12 @@ router.get('/:id', (req, res, next) => {
         message: 'Post not found!',
       })
     }
-  });
+  })
+  .catch((error) => {
+    res.status(500).json({
+      message: 'Fetching post failed',
+    });
+  });;
 })
 
 module.exports = router;
