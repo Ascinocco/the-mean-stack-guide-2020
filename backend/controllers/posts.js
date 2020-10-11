@@ -49,7 +49,7 @@ const updateFolder = (req, res, next) => {
   });
 
   Post.updateOne({ _id: req.params.id, creator, }, post).then((post) => {
-    if (!post.nModified) {
+    if (!post.n) {
       return res.status(401).json({
         message: 'Not authorized',
       });
