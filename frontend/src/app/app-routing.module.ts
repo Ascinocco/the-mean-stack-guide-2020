@@ -25,7 +25,7 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule), // lazy loads our auth module
+    path: 'auth', loadChildren: './auth/auth.module#AuthModule', // lazy loads our auth module
   },
 ];
 
