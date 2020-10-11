@@ -5,12 +5,15 @@ import { Subject } from 'rxjs-compat';
 import { Post } from './post.model';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 interface PostsResponse {
   message: string;
   posts: any;
   maxPosts: number;
 }
+
+const BACKEND_URL = environment.apiUrl + '/posts/';
 
 @Injectable({
   // Injects the service at the root level and only create one instance of it for the entire app
@@ -30,7 +33,7 @@ export class PostsService {
       content: string,
       imagePath: string,
       creator: string,
-    }>('http://localhost:3000/api/posts/' + id);
+    }>(BACKEND_URL + id);
   }
 
   getPosts(postsPerPage: number, currentPage: number) {
@@ -38,7 +41,7 @@ export class PostsService {
     // observables from built in angular packages will automatically unsubscribe upon
     // destroy event
     this.http
-      .get<PostsResponse>('http://localhost:3000/api/posts' + queryParams)
+      .get<PostsResponse>(BACKEND_URL + queryParams)
       .pipe(map((data: PostsResponse) => {
         // Strips message since we aren't using it
         return {
@@ -72,7 +75,7 @@ export class PostsService {
     postData.append('image', image, title);
 
     this.http
-      .post<{message: string, post: Post}>('http://localhost:3000/api/posts', postData)
+      .post<{message: string, post: Post}>(BACKEND_URL, postData)
       .subscribe(() => {
         this.router.navigate(['/']);
       });
@@ -98,13 +101,13 @@ export class PostsService {
     }
 
     this.http
-      .put('http://localhost:3000/api/posts/' + id, postData)
+      .put(BACKEND_URL + id, postData)
       .subscribe(() => {
         this.router.navigate(['/']);
       });
   }
 
   deletePost(postId) {
-    return this.http.delete('http://localhost:3000/api/posts/' + postId);
+    return this.http.delete(BACKEND_URL + postId);
   }
 }
